@@ -1,105 +1,68 @@
 # Automated LinkedIn Job Tracker with n8n
 
-![n8n Workflow Diagram](https://img.shields.io/badge/Workflow%20Built%20With-n8n-FF6600?style=for-the-badge&logo=n8n)
-
-## Table of Contents
-- [Description](#description)
-- [Problem it Solves](#problem-it-solves)
-- [How the Workflow Works](#how-the-workflow-works)
-- [Technologies Used](#technologies-used)
-- [Setup Instructions](#setup-instructions)
-- [Example Use Case](#example-use-case)
+## Project Title
+Automated LinkedIn Job Tracker with n8n
 
 ## Description
-This n8n workflow provides a robust and customizable solution for automating the tracking and management of job applications, particularly those on platforms like LinkedIn. It aims to reduce manual effort by consolidating application statuses, sending timely reminders, and providing daily summaries directly to your preferred communication channels.
+This n8n workflow provides a robust and automated solution for job seekers to effortlessly track new job postings on LinkedIn. It is designed to continuously monitor LinkedIn for relevant job listings based on predefined criteria, notify users of new opportunities, and maintain a structured record of all tracked jobs, significantly streamlining the job search process.
 
-## Problem it Solves
-Manually tracking numerous job applications across various platforms can be overwhelming, time-consuming, and prone to errors. Key challenges include:
-- **Lack of Centralization:** Difficulty in maintaining an organized overview of all submitted applications and their current statuses.
-- **Missed Follow-ups:** Forgetting to follow up on applications after a certain period, potentially missing opportunities.
-- **Inefficient Status Updates:** Spending valuable time manually checking the status of each application.
-- **Information Overload:** Struggling to digest the current state of all applications without a consolidated summary.
-
-This workflow addresses these issues by automating the data aggregation and notification process, ensuring you stay organized and informed without constant manual intervention.
+## Problem It Solves
+Job searching can be an incredibly time-consuming, repetitive, and often overwhelming task. Manually browsing LinkedIn for new job postings across various keywords, locations, and companies is inefficient, prone to human error, and can lead to missing out on valuable, time-sensitive opportunities. This project addresses these challenges by offering an automated system that:
+*   **Eliminates manual searching:** Frees up job seekers from constantly checking LinkedIn.
+*   **Ensures timely updates:** Provides real-time or scheduled notifications for new openings.
+*   **Centralizes job tracking:** Keeps a structured record of all potential opportunities.
+*   **Reduces missed opportunities:** Ensures no relevant job goes unnoticed due to manual oversight.
 
 ## How the Workflow Works
-This n8n workflow operates on a scheduled basis (e.g., daily) to process your job application data and deliver actionable insights. While the exact implementation can be customized, a typical flow involves the following steps:
+The n8n workflow is designed to operate seamlessly through a series of automated steps:
 
-1.  **Scheduled Trigger:** The workflow is activated at a predefined interval (e.g., every morning) using an n8n Cron node or manually invoked when needed.
-2.  **Data Retrieval:** It fetches your current job application data. This data can originate from various sources such as:
-    *   A dedicated spreadsheet (e.g., Google Sheets, Airtable, Excel).
-    *   A database (e8.g., PostgreSQL, MySQL).
-    *   A Notion database or similar structured data repository.
-    *   Internal n8n data storage (e.g., using `Set` and `Get` nodes with `workflow-static-data`).
-3.  **Data Processing & Filtering:** The workflow processes the retrieved data to identify key information:
-    *   **Applications Awaiting Response:** Jobs for which you've applied and are still in an "active" or "pending" state.
-    *   **Follow-up Reminders:** Applications that have passed a specific timeframe (e.g., 7-10 days) since the last interaction and require a follow-up.
-    *   **New Applications:** Potentially identifies new applications added to your tracker since the last run.
-4.  **Summary Generation:** It compiles a concise summary based on the processed data, highlighting critical updates and action items.
-5.  **Notification Delivery:** The generated summary is then sent to your preferred communication channel(s), such as:
-    *   **Email:** Via Gmail, Outlook, or a generic SMTP server.
-    *   **Messaging Apps:** Slack, Telegram, Discord.
-    *   **Other Platforms:** Any service with an available n8n integration.
-6.  **Data Update (Optional):** Optionally, the workflow can update the status of applications in your data source (e.g., marking "followed-up" or changing status based on external input).
+1.  **Scheduled Trigger:** The workflow can be configured to run at regular intervals (e.g., hourly, daily) using a `Cron` or `Schedule Trigger` node.
+2.  **Job Search:** It connects to LinkedIn (typically via an HTTP Request to a search URL, or through browser automation if a more dynamic interaction is required) to search for jobs based on specified keywords, locations, experience levels, and other filters.
+3.  **Data Extraction:** Key information from each job posting is extracted, including job title, company name, location, job URL, description snippet, and posting date.
+4.  **Duplicate Checking & Filtering:** Newly found jobs are compared against a historical record (e.g., in a Google Sheet, Notion database, or Airtable) to prevent sending duplicate notifications and to filter out already-viewed or irrelevant postings.
+5.  **Data Storage:** Relevant new job postings are stored in a designated database or spreadsheet (e.g., Google Sheets, Notion, Airtable) for easy review, management, and long-term tracking.
+6.  **Notifications:** Users receive real-time or summarized notifications (e.g., via Email, Slack, Telegram, Discord, Microsoft Teams) for newly discovered job opportunities, with direct links to the postings.
 
 ## Technologies Used
--   **n8n:** An extendable workflow automation platform that allows you to connect any app with an API to build powerful automations.
--   **LinkedIn:** The primary platform for job searching and application (though direct interaction with LinkedIn's private APIs is generally not supported, this workflow focuses on *tracking your interactions* with LinkedIn jobs).
--   **Data Storage (Choose one or more, depending on your setup):**
-    *   Google Sheets / Excel Online
-    *   Airtable
-    *   Notion
-    *   Baserow
-    *   Any SQL Database
--   **Communication Channels (Choose one or more):**
-    *   Email (e.g., Gmail, Outlook, SMTP)
-    *   Slack
-    *   Telegram
-    *   Discord
+*   **n8n:** The primary workflow automation tool for orchestrating all steps.
+*   **LinkedIn:** The platform for sourcing job opportunities.
+    *   *Note:* Direct LinkedIn API access for job searching is highly restricted for third-party developers. This workflow typically leverages web scraping techniques (using `HTTP Request` or `Browser Automation` nodes) or integrates with third-party job board aggregators that may include LinkedIn postings.
+*   **Google Sheets / Notion / Airtable (Optional):** For structured storage and management of tracked job postings.
+*   **Email / Slack / Telegram / Discord / Microsoft Teams (Optional):** For sending custom notifications.
 
 ## Setup Instructions
-To get this workflow up and running, follow these steps:
 
-### 1. Prerequisites
-*   An active n8n instance (self-hosted or cloud-hosted).
-*   An account with your chosen data storage service (e.g., Google, Airtable, Notion).
-*   (Optional) An account with your preferred notification service (e.g., email provider, Slack).
+1.  **Install n8n:**
+    *   Ensure you have an n8n instance running. You can set it up locally, self-host on a server, or use n8n Cloud. Refer to the official [n8n documentation](https://docs.n8n.io/getting-started/) for detailed installation guides.
 
-### 2. Import the Workflow
-1.  Open your n8n instance in your web browser.
-2.  Navigate to the "Workflows" section.
-3.  Click on "New" or "Add Workflow", then select "Import from JSON".
-4.  Paste the workflow JSON below into the import dialog:
+2.  **Import the Workflow:**
+    *   Assuming the workflow JSON is available, download the workflow file (e.g., `workflow.json`).
+    *   In your n8n instance, navigate to the "Workflows" section in the left sidebar.
+    *   Click on "New" -> "Import from JSON" and paste the workflow JSON content or upload the file.
 
-    ```json
-    <!-- The sanitized workflow JSON would be placed here. As the provided Workflow JSON was '[object Object]', please replace this comment with your actual n8n workflow JSON. -->
-    ```
+3.  **Configure Credentials:**
+    *   The imported workflow will likely require credentials for various services (e.g., if using Google Sheets, Email, Slack, etc.).
+    *   Locate the credential nodes within the workflow (indicated by a "red" or "yellow" warning icon if unconfigured).
+    *   Click on each node, then select "Create New Credential" and follow the prompts to authenticate with your respective accounts (e.g., Google Account for Google Sheets, API token for Slack).
 
-### 3. Configure Credentials
-Once imported, you'll need to configure the credentials for the various nodes used in the workflow:
-1.  **Email Node (e.g., Gmail, SMTP):** Set up your email credentials to allow n8n to send notifications.
-2.  **Data Storage Node (e.g., Google Sheets, Airtable, Notion):** Configure credentials for the service where your job application data is stored.
-3.  **Messaging App Node (e.g., Slack, Telegram):** If you're using a messaging app for notifications, set up the relevant API keys or webhooks.
+4.  **Customize Workflow Settings:**
+    *   **Job Search Parameters:** Find the node responsible for making the LinkedIn search request (e.g., an `HTTP Request` or `Browser Automation` node). Modify the URL query parameters or input fields to specify your desired keywords, location, industry, experience level, and other filters.
+    *   **Storage Integration (if used):** If using a Google Sheet, Notion database, or Airtable, configure the respective nodes with your spreadsheet ID, database ID, and ensure the column mappings match your desired data structure.
+    *   **Notification Preferences (if used):** Adjust the email, Slack, Telegram, or Discord notification nodes with your recipient email address, channel ID, and customize the message content to your liking.
 
-    *Refer to the n8n documentation for detailed instructions on configuring each credential type.*
-
-### 4. Customize the Workflow
-Adjust the workflow nodes to fit your specific needs:
-1.  **Trigger Node:** Modify the Cron node to set your desired schedule (e.g., daily at 8 AM, every weekday morning).
-2.  **Data Source Node:** Update the configuration of your data retrieval node (e.g., Google Sheets, Airtable) to point to your specific spreadsheet, table, or database.
-3.  **Logic & Filtering Nodes:** Customize the `Code` or `Filter` nodes to match your tracking fields (e.g., `status`, `applicationDate`, `followUpDate`) and desired logic for identifying applications needing attention.
-4.  **Notification Node:** Adjust the message content, subject line, and recipient(s) in your email or messaging app node to personalize your daily summary.
-
-### 5. Activate the Workflow
-After all configurations are complete, activate the workflow by toggling the "Active" switch in the top right corner of the n8n editor. The workflow will then run according to its schedule.
+5.  **Activate and Schedule:**
+    *   Once all configurations are complete, activate the workflow by toggling the "Active" switch in the top right corner of the workflow editor.
+    *   Configure the `Schedule Trigger` node to run at your preferred frequency (e.g., every 3 hours, once a day) to continuously monitor for new jobs.
+    *   Perform a manual test run by clicking "Execute Workflow" to ensure all steps function correctly and data is processed as expected.
 
 ## Example Use Case
-Imagine a job seeker, Sarah, who has applied to several positions on LinkedIn and other platforms. She uses a Google Sheet to track each application with fields like 'Company', 'Role', 'Application Date', 'Status', and 'Last Follow-up Date'.
 
-This n8n workflow can be configured to:
-*   **Daily Morning Digest:** Send Sarah a Slack message every weekday at 9:00 AM.
-*   **Summary Content:** The message includes:
-    *   A list of all applications currently in 'Applied' or 'Interviewing' status.
-    *   A specific section for applications where the 'Last Follow-up Date' is more than 7 days ago, prompting her to send a follow-up email.
-    *   A reminder for any upcoming interviews scheduled for the day.
-*   **Streamlined Actions:** Sarah can quickly glance at her Slack message to understand her job search status, prioritize follow-ups, and prepare for interviews, all without manually sifting through her spreadsheet or LinkedIn notifications.
+Consider an experienced "Cloud Engineer" specializing in "AWS" looking for "remote" positions or roles specifically in "Dublin, Ireland". Instead of spending hours each day manually browsing LinkedIn, this n8n workflow can be set up to handle the repetitive tasks.
+
+**Here's how it would work:**
+
+1.  **Scheduled Execution:** The workflow is scheduled to run every 4 hours during weekdays.
+2.  **Targeted Search:** It performs a LinkedIn job search for "Cloud Engineer", "AWS", with location filters for "Remote" and "Dublin, Ireland".
+3.  **Smart Filtering:** New job postings are checked against a Google Sheet where previously tracked jobs are logged. Only genuinely new and relevant opportunities pass through.
+4.  **Structured Storage:** Each new job (title, company, location, URL, description snippet) is added as a new row in your "Cloud Engineer Job Prospects" Google Sheet.
+5.  **Instant Notifications:** A concise Slack message is sent to your personal "#job-alerts" channel, summarizing the new jobs found since the last run, including direct links. This allows you to quickly review them on your phone or computer and decide which ones to apply for.
